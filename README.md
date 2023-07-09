@@ -29,7 +29,7 @@ Control inputs to another TTY from one TTY.
 	3	(-c)	Clear Screen.
 	4	(-s)	Send string.
 	5	(-n)	Send newline character.
-	6	_	    Enter interactive mode.
+	6	_       Enter interactive mode.
 
 ### BUGS
 	Does not work on MacOS due to restrictions on input buffer of another terminal.
