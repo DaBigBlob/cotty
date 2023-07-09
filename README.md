@@ -33,3 +33,16 @@ Control inputs to another TTY from one TTY.
 
 ### BUGS
 	Does not work on MacOS due to restrictions on input buffer of another terminal.
+
+## Installation
+
+```bash
+git clone https://github.com/DaBigBlob/cotty.git
+cd cotty
+make
+```
+
+## Run
+```bash
+./cotty -T path/to/slave/tty
+```
