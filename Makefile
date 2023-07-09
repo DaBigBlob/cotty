@@ -1,2 +1,2 @@
 cotty: cotty.c
-	clang cotty.c -O3 -o cotty
+	clang cotty.c -O3 -Wall -o cotty

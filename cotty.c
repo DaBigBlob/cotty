@@ -282,9 +282,6 @@ int main(int argc, char** argv) {
     }
     vprint(vopt, ": done\n");
 
-    //return int for following stuff
-    int rt;
-
     //send backspaces
     if (bopt > 0) send_backspaces(fd, bopt, vopt);
 
