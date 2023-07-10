@@ -24,7 +24,7 @@ Control inputs to another TTY from one TTY.
 
 ### ORDER OF OPERATIONS
 #### The following is the order of operation in 1(one) run of fatty in (non-interactive mode) irrespective of order of options.
-	1	(-b)	Send Ctrl+c.
+	1	(-C)	Send Ctrl+c.
 	2	(-b)	Send backspaces.
 	3	(-c)	Clear Screen.
 	4	(-s)	Send string.

@@ -11,6 +11,38 @@ void vprint(bool vopt, char* vtext) {
     if (vopt == true) printf("%s", vtext);
 }
 
+void print_license() {
+    //i dont want to include license in the program but the license demands that i do TT
+    printf(
+        "BSD 3-Clause License\n"
+        "\n"
+        "Redistribution and use in source and binary forms, with or without\n"
+        "modification, are permitted provided that the following conditions are met:\n"
+        "\n"
+        "1. Redistributions of source code must retain the above copyright notice, this\n"
+        "   list of conditions and the following disclaimer.\n"
+        "\n"
+        "2. Redistributions in binary form must reproduce the above copyright notice,\n"
+        "   this list of conditions and the following disclaimer in the documentation\n"
+        "   and/or other materials provided with the distribution.\n"
+        "\n"
+        "3. Neither the name of the copyright holder nor the names of its\n"
+        "   contributors may be used to endorse or promote products derived from\n"
+        "   this software without specific prior written permission.\n"
+        "\n"
+        "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\n"
+        "AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n"
+        "IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n"
+        "DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\n"
+        "FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\n"
+        "DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\n"
+        "SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n"
+        "CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\n"
+        "OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\n"
+        "OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n"
+    );
+}
+
 void print_interactive_syntax() {
     printf(
         "INTERACTIVE MODE COMMANDS\n"
@@ -18,6 +50,7 @@ void print_interactive_syntax() {
             "\t\\c\tClear screen.\n"
             "\t\\b\tSend backspace. (Will interactively ask for number of backspaces.)\n"
             "\t\\h\tShow this help text block.\n"
+            "\t\\l\tShow the license.\n"
             "\t\\s\tSend string. (Will interactively ask for string.)\n"
             "\t\\n\tSend newline. Used as the ENTER/RETURN(Mac) key.\n"
             "\t\\C\tSend Ctrl+c to slave tty.\n"
@@ -48,10 +81,11 @@ void print_syntax(char** argv) {
             "\t-n\tSend newline. Used as the ENTER/RETURN(Mac) key.\n"
             "\t-C\tSend Ctrl+c to slave tty.\n"
             "\t-h\tShow this help text block and exit.\n"
+            "\t-l\tPrint the license and exit.\n"
         "\n"
         "ORDER OF OPERATIONS\n"
         "The following is the order of operation in 1(one) run of fatty in (non-interactive mode) irrespective of order of options.\n"
-            "\t1\t(-b)\tSend Ctrl+c.\n"
+            "\t1\t(-C)\tSend Ctrl+c.\n"
             "\t2\t(-b)\tSend backspaces.\n"
             "\t3\t(-c)\tClear Screen.\n"
             "\t4\t(-s)\tSend string.\n"
@@ -165,7 +199,7 @@ int main(int argc, char** argv) {
     int opt;
 
     //option parse
-    while ((opt = getopt(argc, argv, ":T:vdcb:s:nCh")) != -1) switch (opt) {
+    while ((opt = getopt(argc, argv, ":T:vdcb:s:nChl")) != -1) switch (opt) {
         case 'T' : {
             vprint(vopt, "[*] openning the slave tty");
             fd = open(optarg, O_RDWR);
@@ -198,7 +232,7 @@ int main(int argc, char** argv) {
             break;
         }
         case 'b' : {
-            vprint(vopt, "[*] parcing BACKSPACE number");
+            vprint(vopt, "[*] parcing packspace number");
             bopt = atoi(optarg);
             if (bopt == 0) {
                 printf("\n[!] argument provided for \"-b\" is not valid number\n");
@@ -214,13 +248,13 @@ int main(int argc, char** argv) {
             break;
         }
         case 'n' : {
-            vprint(vopt, "[*] sending newline character at end of string set");
+            vprint(vopt, "[*] scheduling newline character");
             nopt = true;
             vprint(vopt, ": done\n");
             break;
         }
         case 'C' : {
-            vprint(vopt, "[*] sending Ctrl+c set");
+            vprint(vopt, "[*] scheduling Ctrl+c");
             Copt = true;
             vprint(vopt, ": done\n");
             break;
@@ -228,6 +262,12 @@ int main(int argc, char** argv) {
         case 'h' : {
             printf("[*] showing help text block\n\n");
             print_syntax(argv);
+            if (fd != 0) close(fd);
+            return 0;
+        }
+        case 'l' : {
+            printf("[*] showing license text block\n\n");
+            print_license();
             if (fd != 0) close(fd);
             return 0;
         }
@@ -326,7 +366,7 @@ int main(int argc, char** argv) {
                         break;
                     }
                     case 'b' : {
-                        printf("number of BACKSPACEs: ");
+                        printf("\nnumber of backspaces to send: ");
                         fgets(cmd, sizeof(cmd), stdin);
 
                         vprint(vopt, "[*] parcing BACKSPACE number");
@@ -346,8 +386,13 @@ int main(int argc, char** argv) {
                         print_interactive_syntax();
                         break;
                     }
+                    case 'l' : {
+                        printf("[*] showing license block\n\n");
+                        print_license();
+                        break;
+                    }
                     case 's' : {
-                        printf("string to send: ");
+                        printf("\nstring to send: ");
                         fgets(cmd, sizeof(cmd), stdin);
 
                         vprint(vopt, "[*] removing newline");
