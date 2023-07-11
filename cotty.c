@@ -89,7 +89,7 @@ void print_syntax(char** argv) {
             "\t-l\tPrint the license and exit.\n"
         "\n"
         "ORDER OF OPERATIONS\n"
-        "The following is the order of operation in 1(one) run of fatty in (non-interactive mode) irrespective of order of options.\n"
+        "The following is the order of operation in 1(one) run of cotty in (non-interactive mode) irrespective of order of options.\n"
             "\t1\t(-C)\tSend Ctrl+c.\n"
             "\t2\t(-b)\tSend backspaces.\n"
             "\t3\t(-c)\tClear Screen.\n"
