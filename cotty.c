@@ -14,6 +14,7 @@ void vprint(bool vopt, char* vtext) {
 void print_license() {
     //i dont want to include license in the program but the license demands that i do TT
     printf(
+        "[+] showing license text block\n\n"
         "BSD 3-Clause License\n"
         "\n"
         "Copyright (c) 2023, hman s. (localboxcrox@gmail.com) (github.com/DaBigBlob)\n"
@@ -64,6 +65,7 @@ void print_interactive_syntax() {
 
 void print_syntax(char** argv) {
     printf(
+        "[+] showing help text block\n\n"
         "NAME\n"
             "\tcotty - COntrol TTY\n"
         "\n"
@@ -105,61 +107,61 @@ void print_syntax(char** argv) {
 
 int send_backspaces(int fd, unsigned int bopt, bool vopt) {
     int rt = 0;
-    vprint(vopt, "[*] sending backspaces");
+    vprint(vopt, "[*] sending backspaces...");
     for (int i=0; i<bopt; i++) if (rt != -1) rt = ioctl(fd, TIOCSTI, "\b");
     if (rt == -1) {
         printf("\n[!] could not put all backspaces to the slave tty\n");
         close(fd);
         return 1;
     };
-    vprint(vopt, ": done\n");
+    vprint(vopt, "done\n");
     return 0;
 }
 
 int clear_screen(int fd, bool vopt) {
-    vprint(vopt, "[*] clearing screen");
+    vprint(vopt, "[*] clearing screen...");
     if (write(fd, "\033[H\033[2J\033[3J", 11) == -1) {
         printf("\n[!] could not clear screen of slave tty\n");
         close(fd);
         return 1;
     }
-    vprint(vopt, ": done\n");
+    vprint(vopt, "done\n");
     return 0;
 }
 
 int send_string(int fd, char* sopt, bool vopt) {
     if (sopt == NULL) return 1;
     int rt = 0;
-    vprint(vopt, "[*] sending string");
+    vprint(vopt, "[*] sending string...");
     for (int i=0; sopt[i]; i++) if (rt != -1) rt = ioctl(fd, TIOCSTI, sopt+i);
     if (rt == -1) {
         printf("\n[!] could not put all characters of string \"%s\" to the slave tty\n", sopt);
         close(fd);
         return 1;
     };
-    vprint(vopt, ": done\n");
+    vprint(vopt, "done\n");
     return 0;
 }
 
 int send_newline(int fd, bool vopt) {
-    vprint(vopt, "[*] sending newline");
+    vprint(vopt, "[*] sending newline...");
     if (ioctl(fd, TIOCSTI, "\n") == -1) {
         printf("\n[!] could not put newline to the slave tty\n");
         close(fd);
         return 1;
     };
-    vprint(vopt, ": done\n");
+    vprint(vopt, "done\n");
     return 0;
 }
 
 int send_ctrl_c(int fd, bool vopt) {
-    vprint(vopt, "[*] sending Ctrl+c");
+    vprint(vopt, "[*] sending Ctrl+c...");
     if (ioctl(fd, TIOCSTI, "\x03") == -1) {
         printf("\n[!] could not send Ctrl+c to the slave tty\n");
         close(fd);
         return 1;
     };
-    vprint(vopt, ": done\n");
+    vprint(vopt, "done\n");
     return 0;
 }
 
@@ -179,10 +181,7 @@ int main(int argc, char** argv) {
         (argc < 2) ||
         (argv[1][0] != '-')
     ) {
-        printf(
-            "[!] wrong syntax\n"
-            "[*] showing help text block\n\n"
-        );
+        printf("[!] wrong syntax\n");
         print_syntax(argv);
         return 1;
     }
@@ -203,18 +202,14 @@ int main(int argc, char** argv) {
     //option parse
     while ((opt = getopt(argc, argv, ":T:vdcb:s:nChl")) != -1) switch (opt) {
         case 'T' : {
-            vprint(vopt, "[*] openning the slave tty");
+            vprint(vopt, "[*] openning the slave tty...");
             fd = open(optarg, O_RDWR);
             if(fd == -1) {
-                printf(
-                    "\n[!] could not open \"%s\"\n"
-                    "[*] showing help text block\n\n"
-                    , optarg
-                );
+                printf("\n[!] could not open \"%s\"\n", optarg);
                 print_syntax(argv);
                 return 1;
             }
-            vprint(vopt, ": done\n");
+            vprint(vopt, "done\n");
             break;
         }
         case 'v' : {
@@ -228,84 +223,69 @@ int main(int argc, char** argv) {
             break;
         }
         case 'c' : {
-            vprint(vopt, "[*] clearing screen is scheduled");
             copt = true;
-            vprint(vopt, ": done\n");
+            vprint(vopt, "[+] clearing screen is scheduled");
             break;
         }
         case 'b' : {
-            vprint(vopt, "[*] parcing packspace number");
+            vprint(vopt, "[*] parcing backspace number...");
             bopt = atoi(optarg);
             if (bopt == 0) {
                 printf("\n[!] argument provided for \"-b\" is not valid number\n");
                 return 1;
             }
-            vprint(vopt, ": done\n");
+            vprint(vopt, "done\n");
             break;
         }
         case 's' : {
-            vprint(vopt, "[*] setting string to be sent");
             sopt = optarg;
-            vprint(vopt, ": done\n");
+            vprint(vopt, "[+] setting string to be sent");
             break;
         }
         case 'n' : {
-            vprint(vopt, "[*] scheduling newline character");
             nopt = true;
-            vprint(vopt, ": done\n");
+            vprint(vopt, "[+] scheduling newline character");
             break;
         }
         case 'C' : {
-            vprint(vopt, "[*] scheduling Ctrl+c");
             Copt = true;
-            vprint(vopt, ": done\n");
+            vprint(vopt, "[+] scheduling Ctrl+c");
             break;
         }
         case 'h' : {
-            printf("[*] showing help text block\n\n");
             print_syntax(argv);
             if (fd != 0) close(fd);
             return 0;
         }
         case 'l' : {
-            printf("[*] showing license text block\n\n");
             print_license();
             if (fd != 0) close(fd);
             return 0;
         }
         case ':' : {
-            printf(
-                "[!] argument of \"-%c\" not provided\n"
-                "[*] showing help text block\n\n"
-                , optopt);
+            printf("[!] argument of \"-%c\" not provided\n", optopt);
             print_syntax(argv);
             return 1;
         }
         default: {
-            printf(
-                "[!] unknown option \"-%c\" provided\n"
-                "[*] showing help text block\n\n"
-                , optopt);
+            printf("[!] unknown option \"-%c\" provided\n", optopt);
             print_syntax(argv);
             return 1;
         }
     } 
 
     //if no -T
-    vprint(vopt, "[*] checking if slave tty is set");
+    vprint(vopt, "[*] checking if slave tty is set...");
     if (fd == 0) {
-        printf(
-            "\n[!] compulsory field \"-T\" not set\n"
-            "[*] showing help text block\n\n"
-        );
+        printf("\n[!] compulsory field \"-T\" not set\n");
         print_syntax(argv);
         close(fd);
         return 1;
     }
-    vprint(vopt, ": done\n");
+    vprint(vopt, "ok\n");
 
     //if nothing to send
-    vprint(vopt, "[*] checking if nothing to send");
+    vprint(vopt, "[*] checking if nothing to send...");
     if (
         (dopt == true) &&   //no interactive env
         (copt == false) &&  //no clear screen
@@ -314,15 +294,12 @@ int main(int argc, char** argv) {
         (nopt == false) &&  //no newline char
         (Copt == false)
     ) {
-        printf(
-            "\n[?] no fruitful work to be done\n"
-            "[*] showing help text block\n\n"    
-        );
+        printf("\n[?] no fruitful work to be done\n");
         print_syntax(argv);
         close(fd);
         return 0;
     }
-    vprint(vopt, ": done\n");
+    vprint(vopt, "ok\n");
 
     //send backspaces
     if (bopt > 0) send_backspaces(fd, bopt, vopt);
@@ -350,7 +327,7 @@ int main(int argc, char** argv) {
             fgets(cmd, sizeof(cmd), stdin);
 
             if (cmd[0] == '\\') {
-                vprint(vopt, "[*] entering command mode\n");
+                vprint(vopt, "[+] entering command mode\n");
 
                 switch (cmd[1]) {
                     case 'v' : {
@@ -371,25 +348,23 @@ int main(int argc, char** argv) {
                         printf("\nnumber of backspaces to send: ");
                         fgets(cmd, sizeof(cmd), stdin);
 
-                        vprint(vopt, "[*] parcing BACKSPACE number");
+                        vprint(vopt, "[*] parcing BACKSPACE number...");
                         bopt = atoi(cmd);
                         if (bopt == 0) {
-                            printf("\n[!] argument provided for \"-b\" is not valid number\n");
+                            printf("\n[!] not valid number\n");
                             return 1;
                         }
-                        vprint(vopt, ": done\n");
+                        vprint(vopt, "done\n");
 
                         //send backspaces
                         if (bopt > 0) send_backspaces(fd, bopt, vopt);
                         break;
                     }
                     case 'h' : {
-                        printf("[*] showing help commands block\n\n");
                         print_interactive_syntax();
                         break;
                     }
                     case 'l' : {
-                        printf("[*] showing license block\n\n");
                         print_license();
                         break;
                     }
@@ -397,9 +372,9 @@ int main(int argc, char** argv) {
                         printf("\nstring to send: ");
                         fgets(cmd, sizeof(cmd), stdin);
 
-                        vprint(vopt, "[*] removing newline");
+                        vprint(vopt, "[*] removing newline...");
                         remove_newline(cmd);
-                        vprint(vopt, ": done\n");
+                        vprint(vopt, "done\n");
 
                         send_string(fd, cmd, vopt);
                         break;
@@ -418,17 +393,14 @@ int main(int argc, char** argv) {
                         exit(0);
                     }
                     default: {
-                        printf(
-                            "[!] unknown command\n"
-                            "[*] showing help commands block\n\n"
-                        );
+                        printf("[!] unknown command\n");
                         print_interactive_syntax();
                     }
                 }
             } else {
-                vprint(vopt, "[*] removing newline");
+                vprint(vopt, "[*] removing newline...");
                 remove_newline(cmd);
-                vprint(vopt, ": done\n");
+                vprint(vopt, "done\n");
                 send_string(fd, cmd, vopt);
                 send_newline(fd, vopt);
             }
