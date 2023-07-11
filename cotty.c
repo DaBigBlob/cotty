@@ -48,6 +48,7 @@ void print_license() {
 
 void print_interactive_syntax() {
     printf(
+        "\n"
         "INTERACTIVE MODE COMMANDS\n"
             "1\t\\v\tToggle verbosity.\n"
             "2\t\\c\tClear screen.\n"
