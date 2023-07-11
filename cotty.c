@@ -58,7 +58,7 @@ void print_interactive_syntax() {
             "\t\\n\tSend newline. Used as the ENTER/RETURN(Mac) key.\n"
             "\t\\C\tSend Ctrl+c to slave tty.\n"
             "\t\\q\tExit interactive mode.\n"
-            "\t_\tJust type and ENTER/RETURN(Mac) to send string.\n"
+            "\t\tJust type and ENTER/RETURN(Mac) to send string.\n"
         "\n"
     );
 }
@@ -94,7 +94,7 @@ void print_syntax(char** argv) {
             "\t3\t(-c)\tClear Screen.\n"
             "\t4\t(-s)\tSend string.\n"
             "\t5\t(-n)\tSend newline character.\n"
-            "\t6\t_\tEnter interactive mode.\n"
+            "\t6\t\tEnter interactive mode.\n"
         "\n"
         "BUGS\n"
             "\tDoes not work on MacOS due to restrictions on input buffer of another terminal.\n"
