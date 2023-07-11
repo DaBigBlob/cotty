@@ -49,16 +49,16 @@ void print_license() {
 void print_interactive_syntax() {
     printf(
         "INTERACTIVE MODE COMMANDS\n"
-            "\t\\v\tToggle verbosity.\n"
-            "\t\\c\tClear screen.\n"
-            "\t\\b\tSend backspace. (Will interactively ask for number of backspaces.)\n"
-            "\t\\h\tShow this help text block.\n"
-            "\t\\l\tShow the license.\n"
-            "\t\\s\tSend string. (Will interactively ask for string.)\n"
-            "\t\\n\tSend newline. Used as the ENTER/RETURN(Mac) key.\n"
-            "\t\\C\tSend Ctrl+c to slave tty.\n"
-            "\t\\q\tExit interactive mode.\n"
-            "\t\tJust type and ENTER/RETURN(Mac) to send string.\n"
+            "1\t\\v\tToggle verbosity.\n"
+            "2\t\\c\tClear screen.\n"
+            "3\t\\b\tSend backspace. (Will interactively ask for number of backspaces.)\n"
+            "4\t\\h\tShow this help text block.\n"
+            "5\t\\l\tShow the license.\n"
+            "6\t\\s\tSend string. (Will interactively ask for string.)\n"
+            "7\t\\n\tSend newline. Used as the ENTER/RETURN(Mac) key.\n"
+            "8\t\\C\tSend Ctrl+c to slave tty.\n"
+            "9\t\\q\tExit interactive mode.\n"
+            "10\t\tJust type and ENTER/RETURN(Mac) to send string.\n"
         "\n"
     );
 }
