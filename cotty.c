@@ -4,6 +4,7 @@
 #include <string.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <termios.h>
 
 typedef enum { false, true } bool;
 
@@ -321,6 +322,13 @@ int main(int argc, char** argv) {
     if (dopt == false) {
         vprint(vopt, "[+] entering interactive mode\n");
         char cmd[256];
+
+        vprint(vopt, "[*] setting to ignore Ctrl+d...");
+        struct termios term;
+        tcgetattr(STDIN_FILENO, &term);
+        term.c_cc[VEOF] = 0;
+        tcsetattr(STDIN_FILENO, TCSANOW, &term);
+        vprint(vopt, "done\n");
 
         printf("\n=============================================\ncommand \"\\h\" for help\n");
         while (1) {
