@@ -174,7 +174,7 @@ void remove_newline(char* str) {
 int main(int argc, char** argv) {
     //prelim total argument check
     if (
-        (argc < 3) ||
+        (argc < 2) ||
         (argv[1][0] != '-')
     ) {
         printf(
