@@ -1,22 +1,22 @@
 #!/bin/sh
 
-#check if wget is present
-if command -v "git" >/dev/null 2>&1; then
-    printf "git not found\nexit\n"
-    exit 1
-fi
+# #check if wget is present
+# if command -v git >/dev/null 2>&1; then
+#     printf "git not found\nexit\n"
+#     exit 1
+# fi
 
-#check if clang is present
-if command -v "clang" >/dev/null 2>&1; then
-    printf "clang not found\nexit\n"
-    exit 1
-fi
+# #check if clang is present
+# if command -v clang >/dev/null 2>&1; then
+#     printf "clang not found\nexit\n"
+#     exit 1
+# fi
 
-#check if mktemp is present
-if command -v "mktemp" >/dev/null 2>&1; then
-    printf "mktemp not found\nexit\n"
-    exit 1
-fi
+# #check if mktemp is present
+# if command -v mktemp >/dev/null 2>&1; then
+#     printf "mktemp not found\nexit\n"
+#     exit 1
+# fi
 
 #get temp dir
 TMP_DIR=$(mktemp -d -t cotty)
