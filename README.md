@@ -1,6 +1,6 @@
 # COTTY
 
-Control inputs to another TTY from one TTY.
+Control inputs to another TTY from one TTY. \
 It automatically enters interactive mode if -d is not passed.
 
 ### SYNOPSIS
