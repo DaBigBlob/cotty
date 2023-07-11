@@ -85,7 +85,7 @@ rm -rf "$TMP_DIR"
 printf "done\n"
 
 if [ "$OS" = "Linux" ]; then
-    printf "\nrun cotty -h to access it"
+    printf "\nrun cotty -h to access it\n"
 else
     printf "\nrun ./cotty -h to access it\n"
     printf "or place it in a directory in your path\n"
