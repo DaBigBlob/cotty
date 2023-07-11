@@ -39,7 +39,6 @@ Control inputs to another TTY from one TTY.
 ```bash
 curl -s https://raw.githubusercontent.com/DaBigBlob/cotty/main/install.sh | sh
 ```
-NOTE: Read the installation script to make sure I aren't doing anything weird to your system.
 
 ## Run
 ```bash
