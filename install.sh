@@ -64,14 +64,14 @@ git clone "https://github.com/DaBigBlob/cotty.git" "$TMP_DIR" -q
 printf "done\n"
 
 
-printf "Compiling..."
+printf "compiling..."
 mkdir -p "$TMP_DIR/dist"
 clang "$TMP_DIR/cotty.c" -O3 -Wall -o "$TMP_DIR/dist/cotty"
 printf "done\n"
 
 OS=$(uname -s)
 if [ "$OS" = "Linux" ]; then
-    printf "Linux detected\nInstalling..."
+    printf "linux detected.\nplacing binery in \"/usr/local/bin\"..."
     cp "$TMP_DIR/dist/cotty" "/usr/local/bin"
     printf "done\n"
 else
