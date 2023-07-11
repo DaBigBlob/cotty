@@ -37,12 +37,16 @@ Control inputs to another TTY from one TTY.
 ## Installation
 
 ```bash
-git clone https://github.com/DaBigBlob/cotty.git
-cd cotty
-make
+curl https://raw.githubusercontent.com/DaBigBlob/cotty/main/install.sh | sh
 ```
+NOTE: Read the installation script to make sure I aren't doing anything weird to your system.
 
 ## Run
 ```bash
 ./cotty -T path/to/slave/tty
 ```
+**or**
+```bash
+cotty -T path/to/slave/tty
+```
+if it was added to your $PATH
