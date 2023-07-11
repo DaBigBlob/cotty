@@ -59,7 +59,7 @@ void print_interactive_syntax() {
             "7\t\\n\tSend newline. Used as the ENTER/RETURN(Mac) key.\n"
             "8\t\\C\tSend Ctrl+c to slave tty.\n"
             "9\t\\q\tExit interactive mode.\n"
-            "10\t\tJust type and ENTER/RETURN(Mac) to send string.\n"
+            "10\t\tJust type and ENTER/RETURN(Mac) to send string. (Including newline.)\n"
         "\n"
     );
 }
