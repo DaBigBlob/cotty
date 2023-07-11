@@ -16,6 +16,8 @@ void print_license() {
     printf(
         "BSD 3-Clause License\n"
         "\n"
+        "Copyright (c) 2023, hman s. (localboxcrox@gmail.com) (github.com/DaBigBlob)\n"
+        "\n"
         "Redistribution and use in source and binary forms, with or without\n"
         "modification, are permitted provided that the following conditions are met:\n"
         "\n"
