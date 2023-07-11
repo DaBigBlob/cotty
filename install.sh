@@ -84,7 +84,11 @@ printf "cleaning up..."
 rm -rf "$TMP_DIR"
 printf "done\n"
 
-printf "\nrun ./cotty to access it\n"
-printf "or place it in a directory in your path\n"
+if [ "$OS" = "Linux" ]; then
+    printf "\nrun cotty -h to access it"
+else
+    printf "\nrun ./cotty -h to access it\n"
+    printf "or place it in a directory in your path\n"
+fi
 
 exit 0
