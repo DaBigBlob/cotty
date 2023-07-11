@@ -57,7 +57,7 @@ else
 fi
 
 #get temp dir
-TMP_DIR=$(mktemp -d -t cotty)
+TMP_DIR=$(mktemp -d)
 
 printf "downloading..."
 git clone "https://github.com/DaBigBlob/cotty.git" "$TMP_DIR" -q
