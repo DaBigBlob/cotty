@@ -348,7 +348,7 @@ int main(int argc, char** argv) {
                         printf("\nnumber of backspaces to send: ");
                         fgets(cmd, sizeof(cmd), stdin);
 
-                        vprint(vopt, "[*] parcing BACKSPACE number...");
+                        vprint(vopt, "[*] parcing backspace number...");
                         bopt = atoi(cmd);
                         if (bopt == 0) {
                             printf("\n[!] not valid number\n");
