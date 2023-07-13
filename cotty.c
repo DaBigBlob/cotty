@@ -226,7 +226,7 @@ int main(int argc, char** argv) {
         }
         case 'c' : {
             copt = true;
-            vprint(vopt, "[+] clearing screen is scheduled");
+            vprint(vopt, "[+] clearing screen is scheduled\n");
             break;
         }
         case 'b' : {
@@ -241,17 +241,17 @@ int main(int argc, char** argv) {
         }
         case 's' : {
             sopt = optarg;
-            vprint(vopt, "[+] setting string to be sent");
+            vprint(vopt, "[+] setting string to be sent\n");
             break;
         }
         case 'n' : {
             nopt = true;
-            vprint(vopt, "[+] scheduling newline character");
+            vprint(vopt, "[+] scheduling newline character\n");
             break;
         }
         case 'C' : {
             Copt = true;
-            vprint(vopt, "[+] scheduling Ctrl+c");
+            vprint(vopt, "[+] scheduling Ctrl+c\n");
             break;
         }
         case 'h' : {
