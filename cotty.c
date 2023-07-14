@@ -59,8 +59,9 @@ void print_interactive_syntax() {
             "6\t\\s\tSend string. (Will interactively ask for string.)\n"
             "7\t\\n\tSend newline. Used as the ENTER/RETURN(Mac) key.\n"
             "8\t\\C\tSend Ctrl+c to slave TTY.\n"
-            "9\t\\q\tExit interactive mode.\n"
-            "10\t\tJust type and ENTER/RETURN(Mac) to send string. (Including newline.)\n"
+            "9\t\\r\tRead whatever is on the slave TTY.\n"
+            "10\t\\q\tExit interactive mode.\n"
+            "11\t\tJust type and ENTER/RETURN(Mac) to send string. (Including newline.)\n"
         "\n"
     );
 }
@@ -86,17 +87,19 @@ void print_syntax(char** argv) {
             "\t-s\tString to send.\n"
             "\t-n\tSend newline. Used as the ENTER/RETURN(Mac) key.\n"
             "\t-C\tSend Ctrl+c to slave TTY.\n"
+            "\t-r\tRead whatever is on the slave TTY.\n"
             "\t-h\tShow this help text block and exit.\n"
             "\t-l\tPrint the license and exit.\n"
         "\n"
         "ORDER OF OPERATIONS\n"
         "The following is the order of operation in 1(one) run of cotty in (non-interactive mode) irrespective of order of options.\n"
-            "\t1\t(-C)\tSend Ctrl+c.\n"
-            "\t2\t(-b)\tSend backspaces.\n"
-            "\t3\t(-c)\tClear Screen.\n"
-            "\t4\t(-s)\tSend string.\n"
-            "\t5\t(-n)\tSend newline character.\n"
-            "\t6\t\tEnter interactive mode.\n"
+            "\t1\t(-r)\tRead from slave TTY.\n"
+            "\t2\t(-C)\tSend Ctrl+c.\n"
+            "\t3\t(-b)\tSend backspaces.\n"
+            "\t4\t(-c)\tClear Screen.\n"
+            "\t5\t(-s)\tSend string.\n"
+            "\t6\t(-n)\tSend newline character.\n"
+            "\t7\t\tEnter interactive mode.\n"
         "\n"
         "BUGS\n"
             "\tDoes not work on MacOS due to restrictions on input buffer of another terminal.\n"
@@ -189,6 +192,51 @@ void remove_newline(char* str, bool vopt) {
     }
 }
 
+int read_screen(int fd, bool vopt) {
+    struct winsize windowSize;
+    vprint(vopt, "[*] reading slave TTY buffer size...");
+    if (ioctl(fd, TIOCGWINSZ, &windowSize) == -1) {
+        vprint(vopt, "\n");
+        printf("[!] could not read\n");
+        return EXIT_FAILURE;
+    } else {
+        vprint(vopt, "done\n");
+    }
+
+    if (windowSize.ws_col * windowSize.ws_row < 1) {
+        printf("[!] slave TTY buffer too small");
+        return EXIT_FAILURE;
+    }
+
+    vprint(vopt, "[*] allocating buffer in memory...");
+    char* buf = malloc(windowSize.ws_row * windowSize.ws_row);
+    if (buf == NULL) {
+        vprint(vopt, "\n");
+        printf("[!] could not allocate\n");
+        return EXIT_FAILURE;
+    } else {
+        vprint(vopt, "done\n");
+    }
+    
+    vprint(vopt, "[*] reading slave TTY buffer...");
+    ssize_t bytes_read = read(fd, buf, windowSize.ws_row * windowSize.ws_row);
+    if (bytes_read <= 0) {
+        vprint(vopt, "\n");
+        printf("[!] could not read\n");
+        return EXIT_FAILURE;
+    } else {
+        vprint(vopt, "done\n");
+    }
+
+    vprint(vopt, "[*] writing to output...");
+    if(write(STDOUT_FILENO, buf, bytes_read) <= 0) {
+        printf("[!] could not write\n");
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
+
 int main(int argc, char** argv) {
     //prelim total argument check
     if (
@@ -211,10 +259,11 @@ int main(int argc, char** argv) {
     char* sopt = NULL;      //string pointer
     bool nopt = false;      //newline
     bool Copt = false;      //ctrl + c
+    bool ropt = false;      //read slave TTY
     int opt;
 
     //option parse
-    while ((opt = getopt(argc, argv, ":T:vdcb:s:nChl")) != -1) switch (opt) {
+    while ((opt = getopt(argc, argv, ":T:vdcb:s:nChrl")) != -1) switch (opt) {
         case 'T' : {
             vprint(vopt, "[*] openning the slave TTY...");
             fd = open(optarg, O_RDWR);
@@ -270,6 +319,11 @@ int main(int argc, char** argv) {
             print_syntax(argv);
             if (fd != 0) close(fd);
             return EXIT_SUCCESS;
+        }
+        case 'r' : {
+            ropt = true;
+            vprint(vopt, "[+] scheduling read from slave TTY\n");
+            break;
         }
         case 'l' : {
             print_license();
@@ -341,6 +395,9 @@ int main(int argc, char** argv) {
 
     //send Ctrl+c
     if (Copt == true) send_ctrl_c(fd, vopt);
+
+    //read from slave TTY
+    if (ropt == true) read_screen(fd, vopt);
 
     //start interactive mode
     if (dopt == false) {
@@ -426,6 +483,10 @@ int main(int argc, char** argv) {
                     }
                     case 'C' : {
                         send_ctrl_c(fd, vopt);
+                        break;
+                    }
+                    case 'r' : {
+                        read_screen(fd, vopt);
                         break;
                     }
                     case 'q' : {
