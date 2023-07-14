@@ -394,7 +394,8 @@ int main(int argc, char** argv) {
                         vprint(vopt, "[*] parcing backspace number...");
                         bopt = atoi(cmd);
                         if (bopt == 0) {
-                            printf("\n[!] not valid number\n");
+                            vprint(vopt, "\n");
+                            printf("[!] not valid number\n");
                         } else {
                             vprint(vopt, "done\n");
                         }
