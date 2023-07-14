@@ -116,8 +116,9 @@ int send_backspaces(int fd, unsigned int bopt, bool vopt) {
         printf("[!] could not put all backspaces to the slave TTY\n");
         close(fd);
         return EXIT_FAILURE;
-    };
-    vprint(vopt, "done\n");
+    } else {
+        vprint(vopt, "done\n");
+    }
     return EXIT_SUCCESS;
 }
 
@@ -128,8 +129,9 @@ int clear_screen(int fd, bool vopt) {
         printf("[!] could not clear screen of slave TTY\n");
         close(fd);
         return EXIT_FAILURE;
+    } else {
+        vprint(vopt, "done\n");
     }
-    vprint(vopt, "done\n");
     return EXIT_SUCCESS;
 }
 
@@ -143,8 +145,9 @@ int send_string(int fd, char* sopt, bool vopt) {
         printf("[!] could not put all characters of string \"%s\" to the slave TTY\n", sopt);
         close(fd);
         return EXIT_FAILURE;
-    };
-    vprint(vopt, "done\n");
+    } else {
+        vprint(vopt, "done\n");
+    }
     return EXIT_SUCCESS;
 }
 
@@ -155,8 +158,9 @@ int send_newline(int fd, bool vopt) {
         printf("[!] could not put newline to the slave TTY\n");
         close(fd);
         return EXIT_FAILURE;
-    };
-    vprint(vopt, "done\n");
+    } else {
+        vprint(vopt, "done\n");
+    }
     return EXIT_SUCCESS;
 }
 
@@ -167,8 +171,9 @@ int send_ctrl_c(int fd, bool vopt) {
         printf("[!] could not send Ctrl+c to the slave TTY\n");
         close(fd);
         return EXIT_FAILURE;
-    };
-    vprint(vopt, "done\n");
+    } else {
+        vprint(vopt, "done\n");
+    }
     return EXIT_SUCCESS;
 }
 
@@ -390,9 +395,9 @@ int main(int argc, char** argv) {
                         bopt = atoi(cmd);
                         if (bopt == 0) {
                             printf("\n[!] not valid number\n");
-                            return EXIT_FAILURE;
+                        } else {
+                            vprint(vopt, "done\n");
                         }
-                        vprint(vopt, "done\n");
 
                         //send backspaces
                         if (bopt > 0) send_backspaces(fd, bopt, vopt);
