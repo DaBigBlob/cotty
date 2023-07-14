@@ -296,7 +296,7 @@ int main(int argc, char** argv) {
 
     //check if TIOCSTI is supported
     vprint(vopt, "[*] checking if TTY buffer injection is possible...");
-    if (ioctl(fd, TIOCSTI, '\0') == -1) {
+    if (ioctl(fd, TIOCSTI, "\0") == -1) {
         vprint(vopt, "\n");
         printf("[!] Operating System does not allow injecting into another TTY's input buffer\n");
         close(fd);
