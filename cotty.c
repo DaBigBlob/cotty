@@ -375,10 +375,10 @@ int main(int argc, char** argv) {
                 switch (cmd[1]) {
                     case 'v' : {
                         if (vopt == true) {
-                            printf("[-] turning verbose mode off");
+                            printf("[-] turning verbose mode off\n");
                             vopt = false;
                         } else {
-                            printf("[+] turning verbose mode on");
+                            printf("[+] turning verbose mode on\n");
                             vopt = true;
                         }
                         break;
