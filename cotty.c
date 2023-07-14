@@ -300,7 +300,7 @@ int main(int argc, char** argv) {
         vprint(vopt, "\n");
         printf("[!] Operating System does not allow injecting into another TTY's input buffer\n");
         close(fd);
-        return EXIT_SUCCESS;
+        return EXIT_FAILURE;
     }
     vprint(vopt, "done\n");
 
@@ -425,7 +425,7 @@ int main(int argc, char** argv) {
                     case 'q' : {
                         printf("[*] quitting interactive mode\n");
                         close(fd);
-                        exit(0);
+                        return EXIT_SUCCESS;;
                     }
                     default: {
                         printf("[!] unknown command\n");
