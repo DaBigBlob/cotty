@@ -193,6 +193,11 @@ void remove_newline(char* str, bool vopt) {
 }
 
 int read_screen(int fd, bool vopt) {
+
+    //DOES NOT WORK :{
+    printf("[!] reading from slave TTY does not work right now\n");
+    return EXIT_FAILURE;
+
     int available_bytes;
     vprint(vopt, "[*] reading slave TTY buffer size...");
     if (ioctl(fd, FIONREAD, &available_bytes) == -1) {
@@ -204,7 +209,7 @@ int read_screen(int fd, bool vopt) {
     }
 
     if (available_bytes < 1) {
-        printf("[!] slave TTY buffer too small");
+        printf("[!] slave TTY buffer too small\n");
         return EXIT_FAILURE;
     }
 
@@ -223,6 +228,7 @@ int read_screen(int fd, bool vopt) {
     if (bytes_read <= 0) {
         vprint(vopt, "\n");
         printf("[!] could not read\n");
+        if (buf != NULL) free(buf);
         return EXIT_FAILURE;
     } else {
         vprint(vopt, "done\n");
@@ -231,9 +237,11 @@ int read_screen(int fd, bool vopt) {
     vprint(vopt, "[*] writing to output...");
     if(write(STDOUT_FILENO, buf, bytes_read) <= 0) {
         printf("[!] could not write\n");
+        if (buf != NULL) free(buf);
         return EXIT_FAILURE;
     }
 
+    if (buf != NULL) free(buf);
     return EXIT_SUCCESS;
 }
 
