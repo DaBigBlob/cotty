@@ -307,7 +307,7 @@ int main(int argc, char** argv) {
         close(fd);
         return EXIT_FAILURE;
     }
-    vprint(vopt, "done\n");
+    vprint(vopt, "ok\n");
 
     //if nothing to send
     vprint(vopt, "[*] checking if nothing to send...");
