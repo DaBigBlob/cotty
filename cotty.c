@@ -112,7 +112,8 @@ int send_backspaces(int fd, unsigned int bopt, bool vopt) {
     vprint(vopt, "[*] sending backspaces...");
     for (int i=0; i<bopt; i++) if (rt != -1) rt = ioctl(fd, TIOCSTI, "\b");
     if (rt == -1) {
-        printf("\n[!] could not put all backspaces to the slave TTY\n");
+        vprint(vopt, "\n");
+        printf("[!] could not put all backspaces to the slave TTY\n");
         close(fd);
         return EXIT_FAILURE;
     };
@@ -123,7 +124,8 @@ int send_backspaces(int fd, unsigned int bopt, bool vopt) {
 int clear_screen(int fd, bool vopt) {
     vprint(vopt, "[*] clearing screen...");
     if (write(fd, "\033[H\033[2J\033[3J", 11) == -1) {
-        printf("\n[!] could not clear screen of slave TTY\n");
+        vprint(vopt, "\n");
+        printf("[!] could not clear screen of slave TTY\n");
         close(fd);
         return EXIT_FAILURE;
     }
@@ -137,7 +139,8 @@ int send_string(int fd, char* sopt, bool vopt) {
     vprint(vopt, "[*] sending string...");
     for (int i=0; sopt[i]; i++) if (rt != -1) rt = ioctl(fd, TIOCSTI, sopt+i);
     if (rt == -1) {
-        printf("\n[!] could not put all characters of string \"%s\" to the slave TTY\n", sopt);
+        vprint(vopt, "\n");
+        printf("[!] could not put all characters of string \"%s\" to the slave TTY\n", sopt);
         close(fd);
         return EXIT_FAILURE;
     };
@@ -148,7 +151,8 @@ int send_string(int fd, char* sopt, bool vopt) {
 int send_newline(int fd, bool vopt) {
     vprint(vopt, "[*] sending newline...");
     if (ioctl(fd, TIOCSTI, "\n") == -1) {
-        printf("\n[!] could not put newline to the slave TTY\n");
+        vprint(vopt, "\n");
+        printf("[!] could not put newline to the slave TTY\n");
         close(fd);
         return EXIT_FAILURE;
     };
@@ -159,7 +163,8 @@ int send_newline(int fd, bool vopt) {
 int send_ctrl_c(int fd, bool vopt) {
     vprint(vopt, "[*] sending Ctrl+c...");
     if (ioctl(fd, TIOCSTI, "\x03") == -1) {
-        printf("\n[!] could not send Ctrl+c to the slave TTY\n");
+        vprint(vopt, "\n");
+        printf("[!] could not send Ctrl+c to the slave TTY\n");
         close(fd);
         return EXIT_FAILURE;
     };
@@ -281,7 +286,8 @@ int main(int argc, char** argv) {
     //if no -T
     vprint(vopt, "[*] checking if slave TTY is set...");
     if (fd == 0) {
-        printf("\n[!] compulsory field \"-T\" not set\n");
+        vprint(vopt, "\n");
+        printf("[!] compulsory field \"-T\" not set\n");
         print_syntax(argv);
         close(fd);
         return EXIT_FAILURE;
@@ -291,7 +297,8 @@ int main(int argc, char** argv) {
     //check if TIOCSTI is supported
     vprint(vopt, "[*] checking if TTY buffer injection is possible...");
     if (ioctl(fd, TIOCSTI, '\0') == -1) {
-        printf("\n[!] Operating System does not allow injecting into another TTY's input buffer\n");
+        vprint(vopt, "\n");
+        printf("[!] Operating System does not allow injecting into another TTY's input buffer\n");
         close(fd);
         return EXIT_SUCCESS;
     }
@@ -307,7 +314,8 @@ int main(int argc, char** argv) {
         (nopt == false) &&  //no newline char
         (Copt == false)
     ) {
-        printf("\n[?] no fruitful work to be done\n");
+        vprint(vopt, "\n");
+        printf("[?] no fruitful work to be done\n");
         print_syntax(argv);
         close(fd);
         return EXIT_SUCCESS;
@@ -336,9 +344,19 @@ int main(int argc, char** argv) {
 
         vprint(vopt, "[*] setting to ignore Ctrl+d...");
         struct termios term;
-        tcgetattr(STDIN_FILENO, &term);
+        if (tcgetattr(STDIN_FILENO, &term) == -1) {
+            vprint(vopt, "\n");
+            printf("[!] could not get terminal attributions\n");
+            close(fd);
+            return EXIT_FAILURE;
+        }
         term.c_cc[VEOF] = 0;
-        tcsetattr(STDIN_FILENO, TCSANOW, &term);
+        if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1) {
+            vprint(vopt, "\n");
+            printf("[!] could not set terminal attributions\n");
+            close(fd);
+            return EXIT_FAILURE;
+        }
         vprint(vopt, "done\n");
 
         printf("\n=============================================\ncommand \"\\h\" for help\n");
