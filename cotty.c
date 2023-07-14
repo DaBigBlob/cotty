@@ -177,11 +177,11 @@ void remove_newline(char* str, bool vopt) {
     while (*str != '\0') {
         if (*str == '\n') {
             *str = '\0';
+            vprint(vopt, "done\n");
             return;
         }
         str++;
     }
-    vprint(vopt, "done\n");
 }
 
 int main(int argc, char** argv) {
