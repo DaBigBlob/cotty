@@ -193,9 +193,9 @@ void remove_newline(char* str, bool vopt) {
 }
 
 int read_screen(int fd, bool vopt) {
-    struct winsize windowSize;
+    int available_bytes;
     vprint(vopt, "[*] reading slave TTY buffer size...");
-    if (ioctl(fd, TIOCGWINSZ, &windowSize) == -1) {
+    if (ioctl(fd, FIONREAD, &available_bytes) == -1) {
         vprint(vopt, "\n");
         printf("[!] could not read\n");
         return EXIT_FAILURE;
@@ -203,13 +203,13 @@ int read_screen(int fd, bool vopt) {
         vprint(vopt, "done\n");
     }
 
-    if (windowSize.ws_col * windowSize.ws_row < 1) {
+    if (available_bytes < 1) {
         printf("[!] slave TTY buffer too small");
         return EXIT_FAILURE;
     }
 
     vprint(vopt, "[*] allocating buffer in memory...");
-    char* buf = malloc(windowSize.ws_row * windowSize.ws_row);
+    char* buf = malloc(available_bytes);
     if (buf == NULL) {
         vprint(vopt, "\n");
         printf("[!] could not allocate\n");
@@ -219,7 +219,7 @@ int read_screen(int fd, bool vopt) {
     }
     
     vprint(vopt, "[*] reading slave TTY buffer...");
-    ssize_t bytes_read = read(fd, buf, windowSize.ws_row * windowSize.ws_row);
+    ssize_t bytes_read = read(fd, buf, available_bytes);
     if (bytes_read <= 0) {
         vprint(vopt, "\n");
         printf("[!] could not read\n");
